@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,18 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/admin', function () {
     return Inertia::render('Admin/Dashboard');
+})->middleware(['auth', 'verified'])->name('admin.dashboard');
+
+Route::prefix('admin')->middleware(['auth', 'verified'])->group(function(){
+    Route::get('/students', [StudentController::class,'index'])->name('admin.students.index');
+    Route::get('/students/create', [StudentController::class,'create'])->name('admin.students.create');
+    Route::post('/students', [StudentController::class,'store'])->name('admin.students.store');
+    Route::get('/students/{student}', [StudentController::class,'show'])->name('admin.students.show');
+    Route::get('/students/{student}/edit', [StudentController::class,'edit'])->name('admin.students.edit');
+    Route::patch('/students/{student}', [StudentController::class,'update'])->name('admin.students.update');
+    Route::delete('/students/{student}', [StudentController::class,'destroy'])->name('admin.students.destroy');
 });
+
+
 
 require __DIR__.'/auth.php';
