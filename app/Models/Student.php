@@ -24,6 +24,25 @@ class Student extends Model
         'image_path',
     ];
 
+     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+    ];
+    
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'reg_date' => 'datetime',
+        'dob' => 'datetime',
+    ];
+
     public function my_class(){
         return $this->belongsTo(Classes::class);
     }
