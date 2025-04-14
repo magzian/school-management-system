@@ -1,12 +1,11 @@
 <script setup>
-    import Navbar from '../Layouts/Navbar.vue';
+    import AdminLayout from '../Layouts/Navbar.vue';
 </script>
 
 <template>
     
-    <Navbar />
-
-<div class="p-4 sm:ml-64">
+    <AdminLayout>
+        <div class="p-4 sm:ml-64">
         <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
             <form>
 
@@ -58,4 +57,7 @@
 </form> 
         </div>
     </div> 
+    </AdminLayout>
+
+
 </template>
