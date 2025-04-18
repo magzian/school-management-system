@@ -43,7 +43,7 @@ Route::get('/admin', function () {
 Route::prefix('admin')->middleware(['auth', 'verified'])->group(function(){
     Route::get('/students', [StudentController::class,'index'])->name('admin.students.index');
     Route::get('/students/create', [StudentController::class,'create'])->name('admin.students.create');
-    Route::post('/students', [StudentController::class,'store'])->name('admin.students.store');
+    Route::post('/students/store', [StudentController::class,'store'])->name('admin.students.store');
     Route::get('/students/{student}', [StudentController::class,'show'])->name('admin.students.show');
     Route::get('/students/{student}/edit', [StudentController::class,'edit'])->name('admin.students.edit');
     Route::patch('/students/{student}', [StudentController::class,'update'])->name('admin.students.update');
