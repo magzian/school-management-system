@@ -17,7 +17,7 @@ class StudentSeeder extends Seeder
     public function run(): void
     {
         // Create 50 student records
-        Student::factory(50)->create();
+        Student::factory(5)->create();
         
         // If you want a specific student with controlled values
         /* Student::factory()->create([

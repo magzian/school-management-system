@@ -15,7 +15,7 @@ class StudentController extends Controller
 {
     public function index(){
 
-        $students = Student::with(['my_class', 'dorm', 'department'])->get();
+        $students = Student::with(['my_class', 'dorm', 'department'])->orderBy('id','desc')->get();
         return Inertia::render('Admin/Student/Index', [
             'students' => $students,
         ]);
@@ -69,20 +69,22 @@ class StudentController extends Controller
         return Redirect::route('admin.students.index')->with('success', 'Student created successfully');
     }
 
-    public function update(Request $request, Student $student){
-        $validated = $request->validate([
-            'fname' => 'required|string|max:255',
-            'lname' => 'required|string|max:255',
-            'gender' => 'required|string|max:255',
-            'email' => 'nullable|string|email|max:255|unique:students'.$student->id,
-            'phone' => 'nullable|string|max:255|unique:students'.$student->id,
-            'address' => 'required|string|max:255',
-            'reg_date' => 'required|date',
-            'parent_number' => 'required|string|max:255',
-            'parent_email' => 'required|string|email|max:255',
-            'dob' => 'required|date',
-            'blood_group' => 'nullable|string|max:255',
-            'image_path' => 'nullable|image|max:2048',
+    public function update(Request $request, $id){
+
+        $student = Student::findOrFail($id);
+
+        $student->update([
+            'fname' => $request->fname,
+            'lname' => $request->lname,
+            'gender' => $request->gender,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'reg_date' => $request->reg_date,
+            'parent_number' => $request->parent_number,
+            'parent_email' => $request->parent_email,
+            'dob' => $request->dob,
+            'blood_group' => $request->blood_group,
         ]);
 
         if($request->hasFile('image_path')){
@@ -90,15 +92,16 @@ class StudentController extends Controller
             $validated['image_path'] = $imagePath;
         }
         
-        $student->update($validated);
+        
 
         return Redirect::route('admin.students.index')->with('success', 'Student updated successfully');
     }
 
-    public function destroy(Student $student)
+    public function destroy($id)
     {
+        $student = Student::findOrFail($id);
         $student->delete();
         
-        return Redirect::route('students.index')->with('success', 'Student deleted successfully.');
+        return Redirect::route('admin.students.index')->with('success', 'Student deleted successfully.');
     }
 }

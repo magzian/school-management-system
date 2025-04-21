@@ -46,9 +46,10 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function(){
     Route::post('/students/store', [StudentController::class,'store'])->name('admin.students.store');
     Route::get('/students/{student}', [StudentController::class,'show'])->name('admin.students.show');
     Route::get('/students/{student}/edit', [StudentController::class,'edit'])->name('admin.students.edit');
-    Route::patch('/students/{student}', [StudentController::class,'update'])->name('admin.students.update');
-    Route::delete('/students/{student}', [StudentController::class,'destroy'])->name('admin.students.destroy');
+    Route::put('/students/update/{id}',[StudentController::class,'update'])->name('admin.students.update');
+    Route::delete('/students/delete/{id}', [StudentController::class,'destroy'])->name('admin.students.destroy');
 });
+
 
 
 
