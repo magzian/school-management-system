@@ -15,7 +15,8 @@ class StudentController extends Controller
 {
     public function index(){
 
-        $students = Student::with(['my_class', 'dorm', 'department'])->orderBy('id','desc')->get();
+        $students = Student::with(['my_class', 'dorm', 'department'])->orderBy('id','desc')->paginate(10);
+        
         return Inertia::render('Admin/Student/Index', [
             'students' => $students,
         ]);
@@ -59,12 +60,16 @@ class StudentController extends Controller
             'image_path' => 'nullable|image|max:2048',
         ]);
 
+
+
         if($request->hasFile('image_path')){
             $imagePath = $request->file('image_path')->store('students', 'public');
             $validated['image_path'] = $imagePath;
         }
         
         Student::create($validated);
+
+        /* dd($validated); */
 
         return Redirect::route('admin.students.index')->with('success', 'Student created successfully');
     }

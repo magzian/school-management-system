@@ -8,6 +8,7 @@ defineProps({
     students: Array,
 });
 
+const errors = ref({});
 const editMode = ref(false);
 const fname = ref("");
 const lname = ref("");
@@ -68,6 +69,7 @@ const resetForm = () => {
 };
 
 const addStudent = async () => {
+    errors.value = {};
     const formData = new FormData();
     formData.append("fname", fname.value);
     formData.append("lname", lname.value);
@@ -84,24 +86,31 @@ const addStudent = async () => {
         formData.append("image_path", image_path.value);
     }
 
-    await router.post("/admin/students/store", formData, {
-        onSuccess: (page) => {
-            document.getElementById("studentModal").close();
-            
-            Swal.fire({
-                toast:true,
-                icon: "success",
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                title: page.props.flash || "Student added successfully",
-            });
-            resetForm();
-        },
-    });
+    try {
+        await router.post("/admin/students/store", formData, {
+            onSuccess: (page) => {
+                document.getElementById("studentModal").close();
+                Swal.fire({
+                    toast:true,
+                    icon: "success",
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    title: page.props.flash || "Student added successfully",
+                });
+                resetForm();
+            },
+            onError: (err) => {
+                errors.value = err;
+            }
+        });
+    } catch (e) {
+        console.error(e);
+    }
 };
 
 const updateStudent = async () => {
+    errors.value = {};
     const formData = new FormData();
     formData.append("fname", fname.value);
     formData.append("lname", lname.value);
@@ -122,21 +131,22 @@ const updateStudent = async () => {
 
     try{
         await router.post("/admin/students/update/" + id.value, formData, {
-        onSuccess: (page) => {
-            document.getElementById("studentModal").close();
-
-            Swal.fire({
-                toast:true,
-                icon: "success",
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                title: page.props.flash || "Student updated successfully",
-            })
-
-            resetForm();
-        },
-    });
+            onSuccess: (page) => {
+                document.getElementById("studentModal").close();
+                Swal.fire({
+                    toast:true,
+                    icon: "success",
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    title: page.props.flash || "Student updated successfully",
+                });
+                resetForm();
+            },
+            onError: (err) => {
+                errors.value = err;
+            }
+        });
     } catch (error) {
         console.log(error);
     }
@@ -228,19 +238,16 @@ const confirmDelete = (student, index) => {
                                         <th scope="col" class="px-4 py-3">
                                             Gender
                                         </th>
-                                        <th scope="col" class="px-4 py-3">
-                                            Registration date
-                                        </th>
-                                        <th scope="col" class="px-4 py-3">
-                                            DOB
-                                        </th>
+                                        
+                                        
+        
                                         <th scope="col" class="px-4 py-3">
                                             <span class="sr-only">Actions</span>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="student in students" :key="student.id"
+                                    <tr v-for="student in students.data" :key="student.id"
                                         class="border-b dark:border-gray-700">
                                         <td class="px-4 py-3">
                                             {{ student.fname }}
@@ -251,28 +258,24 @@ const confirmDelete = (student, index) => {
                                         <td class="px-4 py-3">
                                             {{ student.gender }}
                                         </td>
-                                        <td class="px-4 py-3">
-                                            {{ student.email }}
-                                        </td>
-                                        <td class="px-4 py-3">
-                                            {{ student.dob }}
-                                        </td>
-                                        <td class="px-4 py-3 flex items-center justify-end">
-                                            <button @click="openEditModal(student)" id="student.id" data-dropdown-toggle="student.id"
+                                        <td class="px-4 py-3 flex items-center justify-end space-x-2">
+                                            <button
+                                                type="button"
+                                                @click="openEditModal(student)"
                                                 class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                                type="button">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                                    fill="currentColor" class="size-4">
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                                     <path fill-rule="evenodd"
                                                         d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z"
                                                         clip-rule="evenodd" />
                                                 </svg>
                                             </button>
-                                            <button @click="confirmDelete(student)" id="student.id" data-dropdown-toggle="student.id"
-                                                class="p-6 inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                                type="button">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                                    fill="currentColor" class="size-4">
+                                            <button
+                                                type="button"
+                                                @click="confirmDelete(student)"
+                                                class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                                     <path fill-rule="evenodd"
                                                         d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z"
                                                         clip-rule="evenodd" />
@@ -289,8 +292,12 @@ const confirmDelete = (student, index) => {
                         <dialog id="studentModal" class="modal">
                             <form method="dialog" class="modal-box">
                                 <h3 class="font-bold text-lg mb-4">{{ editMode ? 'Edit' : 'Add' }}</h3>
-
-                                <div class="grid grid-cols-1 gap-4">
+                                <div v-if="Object.keys(errors).length" class="mb-4">
+                                    <ul class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded">
+                                        <li v-for="(msg, key) in errors" :key="key">{{ msg }}</li>
+                                    </ul>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
                                     <input v-model="fname" type="text" placeholder="First Name" class="input input-bordered" />
                                     <input v-model="lname" type="text" placeholder="Last Name" class="input input-bordered" />
                                     <input v-model="email" type="email" placeholder="Email" class="input input-bordered" />
@@ -322,54 +329,31 @@ const confirmDelete = (student, index) => {
                             aria-label="Table navigation">
                             <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                                 Showing
-                                <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+                                <span class="font-semibold text-gray-900 dark:text-white">{{ students.from }}</span>
+                                to
+                                <span class="font-semibold text-gray-900 dark:text-white">{{ students.to }}</span>
                                 of
-                                <span class="font-semibold text-gray-900 dark:text-white">1000</span>
+                                <span class="font-semibold text-gray-900 dark:text-white">{{ students.total }}</span>
                             </span>
                             <ul class="inline-flex items-stretch -space-x-px">
-                                <li>
-                                    <a href="#"
-                                        class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                        <span class="sr-only">Previous</span>
-                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                                </li>
-                                <li>
-                                    <a href="#" aria-current="page"
-                                        class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                        <span class="sr-only">Next</span>
-                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </a>
+                                <li v-for="(link, i) in students.links" :key="i">
+                                    <button
+                                        v-if="link.url"
+                                        :class="[
+                                            'flex items-center justify-center text-sm py-2 px-3 leading-tight border',
+                                            link.active
+                                                ? 'z-10 text-primary-600 bg-primary-50 border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
+                                                : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
+                                            i === 0 ? 'rounded-l-lg' : '',
+                                            i === students.links.length - 1 ? 'rounded-r-lg' : ''
+                                        ]"
+                                        @click="router.visit(link.url, { preserveScroll: true })"
+                                        v-html="link.label"
+                                    />
+                                    <span v-else
+                                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-400 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
+                                        <span v-html="link.label" />
+                                    </span>
                                 </li>
                             </ul>
                         </nav>
