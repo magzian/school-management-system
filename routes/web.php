@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\TeacherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,13 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function(){
     Route::get('/students/{student}/edit', [StudentController::class,'edit'])->name('admin.students.edit');
     Route::put('/students/update/{id}',[StudentController::class,'update'])->name('admin.students.update');
     Route::delete('/students/delete/{id}', [StudentController::class,'destroy'])->name('admin.students.destroy');
+
+
+    //teacher routes
+    Route::get('/teachers', [TeacherController::class, 'index'])->name('admin.teachers.index');
+    Route::post('/teachers/store', [TeacherController::class, 'store'])->name('admin.teachers.store');
+    Route::put('/teachers/update/{id}', [TeacherController::class, 'update'])->name('admin.teachers.update');
+    Route::delete('/teachers/delete/{id}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy');
 });
 
 

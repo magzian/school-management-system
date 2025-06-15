@@ -25,7 +25,7 @@ return new class extends Migration
             $table->longText('education');
             $table->string('image_path')->nullable();
             
-            $table->foreignId('department_id')->constrained('departments')->onDelete('cascade');
+            /* $table->foreignId('department_id')->constrained('departments')->onDelete('cascade'); */
             $table->timestamps();
         });
     }

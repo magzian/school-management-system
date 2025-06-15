@@ -1,193 +1,204 @@
 <script setup>
-import { ref } from "vue";
-import { router } from "@inertiajs/vue3";
-import Swal from "sweetalert2";
-import AdminLayout from "../Layouts/AdminLayout.vue";
+    import AdminLayout from '../Layouts/AdminLayout.vue';
+    import { ref } from 'vue';
+    import { usePage, router } from '@inertiajs/vue3';
+    import Swal from "sweetalert2";
+    
+    defineProps({
+        teachers: Object,
+    });
 
-defineProps({
-    students: Array,
-});
+    const errors = ref({});
+    const fname = ref('');
+    const lname = ref('');
+    const email = ref('');
+    const gender = ref('');
+    const phone = ref('');
+    const address = ref('');
+    const hire_date = ref('');
+    const department = ref('');
+    const dob = ref('');
+    const education = ref('');
+    const image_path = ref(null);
+    const loading = ref(false);
+    const id = ref(null);
+    const editMode = ref(false);
 
-const errors = ref({});
-const editMode = ref(false);
-const fname = ref("");
-const lname = ref("");
-const email = ref("");
-const gender = ref("");
-const phone = ref("");
-const address = ref("");
-const reg_date = ref("");
-const parent_number = ref("");
-const parent_email = ref("");
-const dob = ref("");
-const blood_group = ref("");
-const image_path = ref(null);
-const id = ref(null);
-
-const openAddModal = () => {
-    resetForm();
-    editMode.value = false;
-    document.getElementById("studentModal").showModal();
-};
-
-const openEditModal = (student) => {
-    editMode.value = true;
-    id.value = student.id;
-    fname.value = student.fname;
-    lname.value = student.lname;
-    email.value = student.email;
-    gender.value = student.gender;
-    phone.value = student.phone;
-    address.value = student.address;
-    reg_date.value = student.reg_date;
-    parent_number.value = student.parent_number;
-    parent_email.value = student.parent_email;
-    dob.value = student.dob;
-    blood_group.value = student.blood_group;
-
-    document.getElementById("studentModal").showModal();
-};
-
-const handleFileChange = (e) => {
-    image_path.value = e.target.files[0];
-};
-
-const resetForm = () => {
-    fname.value = "";
-    lname.value = "";
-    email.value = "";
-    gender.value = "";
-    phone.value = "";
-    address.value = "";
-    reg_date.value = "";
-    parent_number.value = "";
-    parent_email.value = "";
-    dob.value = "";
-    blood_group.value = "";
-    image_path.value = null;
-    id.value = null;
-};
-
-const addStudent = async () => {
-    errors.value = {};
-    const formData = new FormData();
-    formData.append("fname", fname.value);
-    formData.append("lname", lname.value);
-    formData.append("email", email.value);
-    formData.append("gender", gender.value);
-    formData.append("phone", phone.value);
-    formData.append("address", address.value);
-    formData.append("reg_date", reg_date.value);
-    formData.append("parent_number", parent_number.value);
-    formData.append("parent_email", parent_email.value);
-    formData.append("dob", dob.value);
-    formData.append("blood_group", blood_group.value);
-    if (image_path.value) {
-        formData.append("image_path", image_path.value);
+    const resetModal = () => {
+        fname.value = '';
+        lname.value = '';
+        email.value = '';
+        gender.value = '';
+        phone.value = '';
+        address.value = '';
+        hire_date.value = '';
+        department.value = '';
+        dob.value = '';
+        education.value = '';
+        image_path.value = null;
+        id.value = null;
     }
 
-    try {
-        await router.post("/admin/students/store", formData, {
-            onSuccess: (page) => {
-                document.getElementById("studentModal").close();
-                Swal.fire({
-                    toast:true,
-                    icon: "success",
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    title: page.props.flash || "Student added successfully",
-                });
-                resetForm();
-            },
-            onError: (err) => {
-                errors.value = err;
-            }
-        });
-    } catch (e) {
-        console.error(e);
-    }
-};
-
-const updateStudent = async () => {
-    errors.value = {};
-    const formData = new FormData();
-    formData.append("fname", fname.value);
-    formData.append("lname", lname.value);
-    formData.append("email", email.value);
-    formData.append("gender", gender.value);
-    formData.append("phone", phone.value);
-    formData.append("address", address.value);
-    formData.append("reg_date", reg_date.value);
-    formData.append("parent_number", parent_number.value);
-    formData.append("parent_email", parent_email.value);
-    formData.append("dob", dob.value);
-    formData.append("blood_group", blood_group.value);
-    formData.append("_method", 'PUT');
-
-    if (image_path.value) {
-        formData.append("image_path", image_path.value);
+    const openAddModal = () => {
+        resetModal();
+        editMode.value = false;  //you are adding this because you are informing the modal that you are adding a new teacher not editing
+        document.getElementById('teacherModal').showModal();
     }
 
-    try{
-        await router.post("/admin/students/update/" + id.value, formData, {
-            onSuccess: (page) => {
-                document.getElementById("studentModal").close();
-                Swal.fire({
-                    toast:true,
-                    icon: "success",
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    title: page.props.flash || "Student updated successfully",
-                });
-                resetForm();
-            },
-            onError: (err) => {
-                errors.value = err;
-            }
-        });
-    } catch (error) {
-        console.log(error);
+    const openEditModal = (teacher) => {
+        resetModal();
+        editMode.value = true;  //you are adding this because you are informing the modal that you are editing a teacher
+        id.value = teacher.id;
+        fname.value = teacher.fname;
+        lname.value = teacher.lname;
+        email.value = teacher.email
+        gender.value = teacher.gender;
+        phone.value = teacher.phone;
+        address.value = teacher.address;
+        hire_date.value = teacher.hire_date;
+        department.value = teacher.department;
+        dob.value = teacher.dob;
+        education.value = teacher.education;
+        image_path.value = teacher.image_path;
+        document.getElementById('teacherModal').showModal();
     }
 
-   
-};
+    const handleFileChange = (e)=> {
+        image_path.value = e.target.files[0];
+    }
 
-const confirmDelete = (student) => {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            router.delete("/admin/students/delete/" + student.id, {
+    const addTeacher = async () => {
+        errors.value = {};
+        const formData = new FormData();
+        formData.append('fname', fname.value);
+        formData.append('lname', lname.value);
+        formData.append('email', email.value);
+        formData.append('gender', gender.value);
+        formData.append('phone', phone.value);
+        formData.append('address', address.value);
+        formData.append('hire_date', hire_date.value);
+        formData.append('department', department.value);
+        formData.append('dob', dob.value);
+        formData.append('education', education.value);
+        formData.append('image_path', image_path.value);
+        loading.value = true;
+
+        try {
+            await router.post('/admin/teachers/store', formData, {
+                preserveScroll:true,
                 onSuccess: (page) => {
-                    this.delete(student)
+                    loading.value = false;
+                    document.getElementById('teacherModal').close();
                     Swal.fire({
                         toast:true,
                         icon: "success",
                         position: "top-end",
                         showConfirmButton: false,
                         timer: 3000,
-                        title: page.props.flash || "Student deleted successfully",
-                    });
+                        title: page.props.flash || "Teacher added successfully",
+                    })
+                    resetModal();
                 },
                 onError: (err) => {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "Something went wrong!",
-                    });
+                    loading.value = false;
+                    errors.value = err;
                 }
-            });
-        }   
-    });
-};
+
+            })
+        } catch (error) {
+            loading.value = false;
+            console.error("Error adding teacher:", error);
+        }
+    }
+
+    const updateTeacher = async () => {
+        errors.value = {};
+        const formData = new FormData();
+        formData.append('id', id.value);
+        formData.append('fname', fname.value);
+        formData.append('lname', lname.value);
+        formData.append('email', email.value);
+        formData.append('gender', gender.value);
+        formData.append('phone', phone.value);
+        formData.append('address', address.value);
+        formData.append('hire_date', hire_date.value);
+        formData.append('department', department.value);
+        formData.append('dob', dob.value);
+        formData.append('education', education.value);
+        formData.append('_method', 'PUT');
+
+        if (image_path.value) {
+            formData.append('image_path', image_path.value);
+        }
+
+        
+
+        try {
+            await router.post(`/admin/teachers/update/${id.value}`, formData, {
+                
+                onSuccess: (page) => {
+                   
+                    document.getElementById('teacherModal').close();
+                    Swal.fire({
+                        toast: true,
+                        icon: "success",
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        title: page.props.flash || "Teacher updated successfully",
+                    })
+                    resetModal();
+                },
+                onError: (err) => {
+                    loading.value = false;
+                    errors.value = err;
+                }
+            })
+        } catch (error) {
+            loading.value = false;
+            console.log("Error updating teacher:", error);
+        }
+    }
+
+    const confirmDelete = (teacher) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete("/admin/teachers/delete/" + teacher.id, {
+                    preserveScroll: true,
+                    onSuccess: (page) => {
+                        Swal.fire({
+                            toast: true,
+                            icon: "success",
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            title: page.props.flash || "Teacher deleted successfully",
+                        });
+                    },
+                    onError: (err) => {
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: err.message || 'Something went wrong!',
+                        });
+                    }
+                });
+            }
+        })
+    }
+
+
 </script>
 
 <template>
@@ -227,7 +238,7 @@ const confirmDelete = (student) => {
                                         <path clip-rule="evenodd" fill-rule="evenodd"
                                             d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                                     </svg>
-                                    Add Student
+                                    Add Teacher
                                 </button>
                             </div>
                         </div>
@@ -251,21 +262,21 @@ const confirmDelete = (student) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="student in students.data" :key="student.id"
+                                    <tr v-for="teacher in teachers.data" :key="teacher.id"
                                         class="border-b dark:border-gray-700">
                                         <td class="px-4 py-3">
-                                            {{ student.fname }}
+                                            {{ teacher.fname }}
                                         </td>
                                         <td class="px-4 py-3">
-                                            {{ student.lname }}
+                                            {{ teacher.lname }}
                                         </td>
                                         <td class="px-4 py-3">
-                                            {{ student.gender }}
+                                            {{ teacher.gender }}
                                         </td>
                                         <td class="px-4 py-3 flex items-center justify-end space-x-2">
                                             <button
                                                 type="button"
-                                                @click="openEditModal(student)"
+                                                @click="openEditModal(teacher)"
                                                 class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
@@ -276,7 +287,7 @@ const confirmDelete = (student) => {
                                             </button>
                                             <button
                                                 type="button"
-                                                @click="confirmDelete(student)"
+                                                @click="confirmDelete(teacher)"
                                                 class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
@@ -291,9 +302,9 @@ const confirmDelete = (student) => {
                             </table>
                         </div>
 
-                        <!-- Add/Edit Student Modal -->
+                        <!-- Add/Edit Teacher Modal -->
 
-                        <dialog id="studentModal" class="modal">
+                        <dialog id="teacherModal" class="modal">
                             <form method="dialog" class="modal-box">
                                 <h3 class="font-bold text-lg mb-4">{{ editMode ? 'Edit' : 'Add' }}</h3>
                                 <div v-if="Object.keys(errors).length" class="mb-4">
@@ -308,16 +319,15 @@ const confirmDelete = (student) => {
                                     <input v-model="phone" type="text" placeholder="Phone" class="input input-bordered" />
                                     <input v-model="gender" type="text" placeholder="Gender" class="input input-bordered" />
                                     <input v-model="address" type="text" placeholder="Address" class="input input-bordered" />
-                                    <input v-model="dob" type="date" placeholder="DOB" class="input input-bordered" />
-                                    <input v-model="reg_date" type="date" placeholder="DOR" class="input input-bordered" />
-                                    <input v-model="parent_email" type="email" placeholder="Parent Email" class="input input-bordered" />
-                                    <input v-model="parent_number" type="text" placeholder="Parent Number" class="input input-bordered" />
-                                    <input v-model="blood_group" type="text" placeholder="Blood Group" class="input input-bordered" />
+                                    <input v-model="hire_date" type="date" placeholder="Hire Date" class="input input-bordered" />
+                                    <input v-model="dob" type="date" placeholder="Date of Birth" class="input input-bordered" />
+                                    <input v-model="department" type="text" placeholder="Department" class="input input-bordered" />
+                                    <input v-model="education" type="text" placeholder="Education" class="input input-bordered" />
                                     <input type="file" @change="handleFileChange" class="file-input file-input-bordered" />
                                 </div>
                                 <div class="modal-action">
-                                    <button class="btn" @click="resetForm">Cancel</button>
-                                    <button class="btn btn-primary" @click.prevent="editMode ? updateStudent() : addStudent()">
+                                    <button class="btn" @click="resetModal">Cancel</button>
+                                    <button class="btn btn-primary" @click.prevent="editMode ? updateTeacher() : addTeacher()">
                                         {{ editMode ? 'Update' : 'Add' }}
                                     </button>
                                 </div>
@@ -333,14 +343,14 @@ const confirmDelete = (student) => {
                             aria-label="Table navigation">
                             <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                                 Showing
-                                <span class="font-semibold text-gray-900 dark:text-white">{{ students.from }}</span>
+                                <span class="font-semibold text-gray-900 dark:text-white">{{ teachers.from }}</span>
                                 to
-                                <span class="font-semibold text-gray-900 dark:text-white">{{ students.to }}</span>
+                                <span class="font-semibold text-gray-900 dark:text-white">{{ teachers.to }}</span>
                                 of
-                                <span class="font-semibold text-gray-900 dark:text-white">{{ students.total }}</span>
+                                <span class="font-semibold text-gray-900 dark:text-white">{{ teachers.total }}</span>
                             </span>
                             <ul class="inline-flex items-stretch -space-x-px">
-                                <li v-for="(link, i) in students.links" :key="i">
+                                <li v-for="(link, i) in teachers.links" :key="i">
                                     <button
                                         v-if="link.url"
                                         :class="[
@@ -349,7 +359,7 @@ const confirmDelete = (student) => {
                                                 ? 'z-10 text-primary-600 bg-primary-50 border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
                                                 : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
                                             i === 0 ? 'rounded-l-lg' : '',
-                                            i === students.links.length - 1 ? 'rounded-r-lg' : ''
+                                            i === teachers.links.length - 1 ? 'rounded-r-lg' : ''
                                         ]"
                                         @click="router.visit(link.url, { preserveScroll: true })"
                                         v-html="link.label"
@@ -364,6 +374,7 @@ const confirmDelete = (student) => {
                     </div>
                 </div>
             </section>
+            
         </div>
     </AdminLayout>
 </template>
