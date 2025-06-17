@@ -20,6 +20,11 @@ class TeacherController extends Controller
         ]);
     }
 
+    public function create(){
+
+        return Inertia::render('Admin/Teacher/Create');
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -33,7 +38,7 @@ class TeacherController extends Controller
             'department' => 'required|string|max:255',
             'dob' => 'required|date',
             'education' => 'required|string|max:255',
-            'image_path' => 'nullable|string|max:255',
+            'image_path' => 'nullable',
         ]);
 
         if ($request->hasFile('image_path')) {

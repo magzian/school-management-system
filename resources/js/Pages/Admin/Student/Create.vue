@@ -4,7 +4,7 @@ import { router } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
 
 import AdminLayout from '../Layouts/AdminLayout.vue';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'; 
 
 
 // Student data

@@ -53,6 +53,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function(){
 
     //teacher routes
     Route::get('/teachers', [TeacherController::class, 'index'])->name('admin.teachers.index');
+    Route::get('/teachers/create', [TeacherController::class, 'create'])->name('admin.teachers.create');
     Route::post('/teachers/store', [TeacherController::class, 'store'])->name('admin.teachers.store');
     Route::put('/teachers/update/{id}', [TeacherController::class, 'update'])->name('admin.teachers.update');
     Route::delete('/teachers/delete/{id}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy');
