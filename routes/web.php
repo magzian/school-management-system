@@ -4,8 +4,12 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DormController;
+use App\Http\Controllers\Admin\CoursesController;
+use App\Http\Controllers\Admin\MyClassController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\Admin\DepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +61,27 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function(){
     Route::post('/teachers/store', [TeacherController::class, 'store'])->name('admin.teachers.store');
     Route::put('/teachers/update/{id}', [TeacherController::class, 'update'])->name('admin.teachers.update');
     Route::delete('/teachers/delete/{id}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy');
+
+
+    //Department routes
+    Route::get('/departments', [DepartmentController::class, 'index'])->name('admin.departments.index');
+    Route::get('/departments/create', [DepartmentController::class, 'create'])->name('admin.departments.create');
+
+
+    //Dorm routes
+    Route::get('/dorms', [DormController::class, 'index'])->name('admin.dorms.index');
+
+
+    //Classes routes
+    Route::get('/classes', [MyClassController::class, 'index'])->name('admin.classes.index');
+    Route::get('/classes/create', [MyClassController::class, 'create'])->name('admin.classes.create');
+
+
+    //Subject/Course routes  
+    //On the frontend side it will be called subjects while in the backend it will be called courses
+    Route::get('/subjects', [CoursesController::class, 'index'])->name('admin.courses.index');
+    Route::get('/subjects/create', [CoursesController::class, 'create'])->name('admin.courses.create');
+
 });
 
 

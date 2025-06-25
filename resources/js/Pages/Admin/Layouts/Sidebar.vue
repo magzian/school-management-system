@@ -136,7 +136,7 @@ import { Link } from '@inertiajs/vue3';
   <path d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 0 1-1.286 1.794.75.75 0 0 1-1.06-1.06Z" />
 </svg>
 
-                        <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Courses</span>
+                        <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Subjects</span>
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -145,12 +145,12 @@ import { Link } from '@inertiajs/vue3';
                     </button>
                     <ul id="courses" class="hidden py-2 space-y-2">
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">All Courses</a>
+                            <Link :href="route('admin.courses.index')"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">All Subjects</Link>
                         </li>
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Add Courses</a>
+                            <Link :href="route('admin.courses.create')"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Add Subjects</Link>
                         </li>
                     </ul>
                 </li>
@@ -173,12 +173,12 @@ import { Link } from '@inertiajs/vue3';
                     </button>
                     <ul id="classes" class="hidden py-2 space-y-2">
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">All Classes</a>
+                            <Link :href="route('admin.classes.index')"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">All Classes</Link>
                         </li>
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Add Class</a>
+                            <Link :href="route('admin.classes.create')"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Add Class</Link>
                         </li>
                     </ul>
                 </li>
@@ -201,8 +201,8 @@ import { Link } from '@inertiajs/vue3';
                     </button>
                     <ul id="dorms" class="hidden py-2 space-y-2">
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">All Dorms</a>
+                            <Link :href="route('admin.dorms.index')"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">All Dorms</Link>
                         </li>
                         <li>
                             <a href="#"
@@ -227,12 +227,12 @@ import { Link } from '@inertiajs/vue3';
                     </button>
                     <ul id="departments" class="hidden py-2 space-y-2">
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">All departments</a>
+                            <Link :href="route('admin.departments.index')"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">All departments</Link>
                         </li>
                         <li>
-                            <a href="#"
-                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Add department</a>
+                            <Link :href="route('admin.departments.create')"
+                                class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Add department</Link>
                         </li>
                     </ul>
                 </li>
