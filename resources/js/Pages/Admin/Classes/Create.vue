@@ -12,4 +12,4 @@ import AdminLayout from '../Layouts/AdminLayout.vue';
         <p class="text-gray-500">Please check back later for updates.</p>
     </div>
     </AdminLayout>
-</template>
+</template> 

@@ -75,7 +75,7 @@ const AddStudent = async () => {
         await router.post("/admin/students/store", formData, {
             onSuccess: (page) => {
                 loading.value = false;
-                Swal.fire({
+                Swal.fire({ 
                     toast:true,
                     icon:"success",
                     position:"top-end",

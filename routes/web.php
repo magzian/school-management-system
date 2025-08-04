@@ -81,6 +81,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function(){
     //On the frontend side it will be called subjects while in the backend it will be called courses
     Route::get('/subjects', [CoursesController::class, 'index'])->name('admin.courses.index');
     Route::get('/subjects/create', [CoursesController::class, 'create'])->name('admin.courses.create');
+    Route::post('/subjects/store', [CoursesController::class, 'store'])->name('admin.courses.store');
 
 });
 
